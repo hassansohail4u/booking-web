@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, query, where, getDocs, orderBy, limit, getDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Booking, Seat } from "@/types/booking";
 
-export default function ConfirmationPage() {
+function ConfirmationContent() {
   const { currentUser, userData } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -139,6 +139,20 @@ export default function ConfirmationPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-xl">Loading...</div>
+        </div>
+      }
+    >
+      <ConfirmationContent />
+    </Suspense>
   );
 }
 
